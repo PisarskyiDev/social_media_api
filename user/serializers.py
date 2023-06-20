@@ -3,11 +3,28 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
+    followers = serializers.SerializerMethodField()
+
     class Meta:
         model = get_user_model()
-        fields = ("id", "email", "password", "is_staff", "sex", "followers", "avatar")
+        fields = (
+            "id",
+            "email",
+            "password",
+            "is_staff",
+            "sex",
+            "subscribe",
+            "followers",
+            "avatar",
+        )
         read_only_fields = ("is_staff",)
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
+
+    @staticmethod
+    def get_followers(obj):
+        """Filter out followers, except current user"""
+        followers = obj.followers.exclude(pk=obj.pk)
+        return [follower.pk for follower in followers]
 
     def create(self, validated_data):
         """Create a new user with encrypted password and return it"""

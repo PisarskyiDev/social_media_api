@@ -63,8 +63,8 @@ class User(AbstractUser):
     sex = models.CharField(
         max_length=10, choices=GenderChoices.choices, default=GenderChoices.UNKNOWN
     )
-    followers = models.ManyToManyField(
-        to="self", blank=True, related_name="following", symmetrical=False
+    subscribe = models.ManyToManyField(
+        to="self", blank=True, related_name="followers", symmetrical=False
     )
     avatar = models.ImageField(null=True, blank=True, upload_to=movie_image_file_path)
 
