@@ -14,12 +14,19 @@ class UserSerializer(serializers.ModelSerializer):
         return get_user_model().objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
-        """Update a user, set the password correctly and return it"""
+        """Update a user, set the password and avatar correctly and return it"""
         password = validated_data.pop("password", None)
+        avatar = validated_data.pop("avatar", None)
+
         user = super().update(instance, validated_data)
+
         if password:
             user.set_password(password)
-            user.save()
+
+        if avatar is not None:
+            user.avatar = avatar
+
+        user.save()
 
         return user
 
