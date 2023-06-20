@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.utils.timezone
-import users.models
+import user.models
 
 
 class Migration(migrations.Migration):
@@ -126,11 +126,11 @@ class Migration(migrations.Migration):
             ],
             options={
                 "verbose_name": "user",
-                "verbose_name_plural": "users",
+                "verbose_name_plural": "user",
                 "abstract": False,
             },
             managers=[
-                ("objects", users.models.UserManager()),
+                ("objects", user.models.UserManager()),
             ],
         ),
     ]
