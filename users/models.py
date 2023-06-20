@@ -50,7 +50,9 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_("email address"), unique=True)
     sex = models.CharField(max_length=10, choices=GenderChoices.choices)
-    followers = models.ManyToManyField(to="self", blank=True, related_name="following")
+    followers = models.ManyToManyField(
+        to="self", blank=True, related_name="following", symmetrical=False
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
