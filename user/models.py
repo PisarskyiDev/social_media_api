@@ -53,14 +53,16 @@ def movie_image_file_path(instance, filename):
 
 class User(AbstractUser):
     class GenderChoices(models.TextChoices):
+        UNKNOWN = "unknown"
         MALE = "male"
         FEMALE = "female"
         GENDERLESS = "genderless"
-        UNKNOWN = "unknown"
 
     username = None
     email = models.EmailField(_("email address"), unique=True)
-    sex = models.CharField(max_length=10, choices=GenderChoices.choices)
+    sex = models.CharField(
+        max_length=10, choices=GenderChoices.choices, default=GenderChoices.UNKNOWN
+    )
     followers = models.ManyToManyField(
         to="self", blank=True, related_name="following", symmetrical=False
     )
