@@ -20,14 +20,12 @@ class CommentarySerializer(serializers.ModelSerializer):
         )
 
 
-class CommentaryToPostSerializer(CommentarySerializer):
+class CommentaryListSerializer(CommentarySerializer):
     class Meta:
         model = Commentary
         fields = (
             "id",
             "owner",
-            "post",
-            "created_at",
         )
         read_only_fields = (
             "owner",
@@ -41,7 +39,6 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "owner",
-            "post",
         )
         read_only_fields = (
             "owner",
@@ -50,7 +47,7 @@ class LikeSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    comments = CommentaryToPostSerializer(many=True, read_only=True)
+    comments = CommentaryListSerializer(many=True, read_only=True)
     like = LikeSerializer(many=True, read_only=True)
     image = serializers.ImageField(use_url=True, allow_null=True, required=False)
 

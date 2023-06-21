@@ -10,6 +10,7 @@ from blog.serializers import (
     CommentarySerializer,
     LikeSerializer,
     PostListSerializer,
+    CommentaryListSerializer,
 )
 from user.permissions import IsOwnerOrAdminOrReadOnly
 
@@ -42,8 +43,12 @@ class CommentaryViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    serializer_class = CommentarySerializer
     permission_classes = (IsAuthenticated, IsOwnerOrAdminOrReadOnly)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CommentaryListSerializer
+        return CommentarySerializer
 
     def get_queryset(self):
         return Commentary.objects.filter(post__pk=self.kwargs["post_pk"])
