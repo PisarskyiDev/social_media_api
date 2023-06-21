@@ -23,7 +23,9 @@ class PostViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Post.objects.all().prefetch_related("comments")
+    queryset = (
+        Post.objects.all().select_related("owner").prefetch_related("comments", "like")
+    )
     permission_classes = (IsAuthenticated, IsOwnerOrAdminOrReadOnly)
 
     def get_serializer_class(self):
@@ -51,7 +53,9 @@ class CommentaryViewSet(
         return CommentarySerializer
 
     def get_queryset(self):
-        return Commentary.objects.filter(post__pk=self.kwargs["post_pk"])
+        return Commentary.objects.filter(
+            post__pk=self.kwargs["post_pk"]
+        ).prefetch_related("owner")
 
     def perform_create(self, serializer):
         post = get_object_or_404(Post, pk=self.kwargs["post_pk"])
