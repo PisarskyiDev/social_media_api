@@ -6,7 +6,6 @@ from django.contrib.auth.models import (
     BaseUserManager,
 )
 from django.db import models
-from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
 
@@ -44,11 +43,11 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-def movie_image_file_path(instance, filename):
+def avatar_image_file_path(instance, filename):
     _, extension = os.path.splitext(filename)
     filename = f"{uuid.uuid4()}{extension}"
 
-    return os.path.join("uploads/avatar/", filename)
+    return os.path.join("uploads/avatar/image", filename)
 
 
 class User(AbstractUser):
@@ -66,7 +65,7 @@ class User(AbstractUser):
     subscribe = models.ManyToManyField(
         to="self", blank=True, related_name="followers", symmetrical=False
     )
-    avatar = models.ImageField(null=True, blank=True, upload_to=movie_image_file_path)
+    avatar = models.ImageField(null=True, blank=True, upload_to=avatar_image_file_path)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
