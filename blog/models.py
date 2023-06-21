@@ -33,3 +33,17 @@ class Commentary(models.Model):
 
     def __str__(self):
         return self.owner.email
+
+
+class Like(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="like")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="like")
+
+    class Meta:
+        unique_together = (
+            "owner",
+            "post",
+        )
+
+    def __str__(self):
+        return self.owner.pk
