@@ -76,3 +76,18 @@ class PostSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
+
+
+class PostListSerializer(PostSerializer):
+    class Meta:
+        model = Post
+        fields = (
+            "id",
+            "owner",
+            "title",
+            "content",
+            "created_at",
+            "updated_at",
+            "image",
+        )
+        read_only_fields = ("owner",)

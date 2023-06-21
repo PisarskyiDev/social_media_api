@@ -5,7 +5,12 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 
 from blog.models import Post, Commentary, Like
-from blog.serializers import PostSerializer, CommentarySerializer, LikeSerializer
+from blog.serializers import (
+    PostSerializer,
+    CommentarySerializer,
+    LikeSerializer,
+    PostListSerializer,
+)
 from user.permissions import IsOwnerOrAdminOrReadOnly
 
 
@@ -18,8 +23,12 @@ class PostViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = Post.objects.all().prefetch_related("comments")
-    serializer_class = PostSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrAdminOrReadOnly)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PostListSerializer
+        return PostSerializer
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
