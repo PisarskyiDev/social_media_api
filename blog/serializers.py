@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from blog.models import Post, Commentary
+from blog.models import Post, Commentary, Like
 
 
 class CommentarySerializer(serializers.ModelSerializer):
@@ -35,8 +35,23 @@ class CommentaryToPostSerializer(CommentarySerializer):
         )
 
 
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = (
+            "id",
+            "owner",
+            "post",
+        )
+        read_only_fields = (
+            "owner",
+            "post",
+        )
+
+
 class PostSerializer(serializers.ModelSerializer):
     comments = CommentaryToPostSerializer(many=True, read_only=True)
+    like = LikeSerializer(many=True, read_only=True)
     image = serializers.ImageField(use_url=True, allow_null=True, required=False)
 
     class Meta:
@@ -50,6 +65,7 @@ class PostSerializer(serializers.ModelSerializer):
             "updated_at",
             "image",
             "comments",
+            "like",
         )
         read_only_fields = ("owner",)
 
