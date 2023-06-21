@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from blog.models import Post, Commentary
 from blog.serializers import PostSerializer, CommentarySerializer
+from user.permissions import IsOwnerOrAdminOrReadOnly
 
 
 class PostViewSet(
@@ -15,7 +16,7 @@ class PostViewSet(
 ):
     queryset = Post.objects.all().prefetch_related("comments")
     serializer_class = PostSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsOwnerOrAdminOrReadOnly)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -29,7 +30,7 @@ class CommentaryViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = CommentarySerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsOwnerOrAdminOrReadOnly)
 
     def get_queryset(self):
         return Commentary.objects.filter(post__pk=self.kwargs["post_pk"])
