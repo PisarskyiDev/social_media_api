@@ -29,9 +29,7 @@ class PostViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = (
-        Post.objects.all().select_related("owner").prefetch_related("comments", "like")
-    )
+    queryset = Post.objects.select_related("owner").prefetch_related("comments", "like")
     permission_classes = (IsAuthenticated, IsOwnerOrAdminOrReadOnly)
     pagination_class = OrderPagination
 

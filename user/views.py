@@ -24,7 +24,7 @@ class UserView(
     viewsets.GenericViewSet,
 ):
     serializer_class = UserSerializer
-    queryset = User.objects.prefetch_related("subscribe__followers").all()
+    queryset = User.objects.prefetch_related("subscribe__followers")
     pagination_class = OrderPagination
 
 
