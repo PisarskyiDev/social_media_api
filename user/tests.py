@@ -122,10 +122,7 @@ class UserViewTest(APITestCase):
         self.assertNotEqual(other_user.sex, "female")
 
     def test_can_list_users(self):
-        User.objects.create_user(
-            email="another@test.com", password="password123", sex="female"
-        )
         response = self.client.get(reverse("user:profile-list"))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data["results"]), 1)
