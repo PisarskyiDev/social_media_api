@@ -10,6 +10,7 @@
 - `git clone https://github.com/Soobig666/social_media_api.git`
 - `git checkout develop`
 - Copy .env.sample -> .env and populate with all required data
+- Install [Docker](https://www.docker.com/products/docker-desktop/)
 - `docker-compose up --build`
 - Create admin user & Create schedule for running sync in DB
 
@@ -18,9 +19,6 @@
 This API gives users the ability to interact with a blog. It provides several endpoints to manipulate and retrieve data about posts, their associated comments, and likes.
 
 ### Endpoints
-
-- List of all posts
-"/api/blog/posts/"
 
 - Details of a specific post
 "/api/blog/posts/{post_pk}"
