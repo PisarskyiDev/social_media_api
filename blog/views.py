@@ -2,7 +2,6 @@ from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 
 from blog.models import Post, Commentary, Like
@@ -14,11 +13,7 @@ from blog.serializers import (
     CommentaryListSerializer,
 )
 from user.permissions import IsOwnerOrAdminOrReadOnly
-
-
-class OrderPagination(PageNumberPagination):
-    page_size = 5
-    max_page_size = 100
+from .pagination import OrderPagination
 
 
 class PostViewSet(

@@ -1,14 +1,9 @@
 from rest_framework import generics, viewsets, mixins
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 
+from blog.pagination import OrderPagination
 from user.models import User
 from user.serializers import UserSerializer, UserCreateSerializer
-
-
-class OrderPagination(PageNumberPagination):
-    page_size = 3
-    max_page_size = 100
 
 
 class CreateUserView(generics.CreateAPIView):
