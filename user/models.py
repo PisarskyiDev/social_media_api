@@ -6,7 +6,6 @@ from django.contrib.auth.models import (
     BaseUserManager,
 )
 from django.db import models
-from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
 
@@ -44,27 +43,29 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-def movie_image_file_path(instance, filename):
+def avatar_image_file_path(instance, filename):
     _, extension = os.path.splitext(filename)
-    filename = f"{slugify(instance.pk)}-{uuid.uuid4()}{extension}"
+    filename = f"{uuid.uuid4()}{extension}"
 
-    return os.path.join("uploads/avatar/", filename)
+    return os.path.join("uploads/avatar/image", filename)
 
 
 class User(AbstractUser):
     class GenderChoices(models.TextChoices):
+        UNKNOWN = "unknown"
         MALE = "male"
         FEMALE = "female"
         GENDERLESS = "genderless"
-        UNKNOWN = "unknown"
 
     username = None
     email = models.EmailField(_("email address"), unique=True)
-    sex = models.CharField(max_length=10, choices=GenderChoices.choices)
-    followers = models.ManyToManyField(
-        to="self", blank=True, related_name="following", symmetrical=False
+    sex = models.CharField(
+        max_length=10, choices=GenderChoices.choices, default=GenderChoices.UNKNOWN
     )
-    avatar = models.ImageField(null=True, blank=True, upload_to=movie_image_file_path)
+    subscribe = models.ManyToManyField(
+        to="self", blank=True, related_name="followers", symmetrical=False
+    )
+    avatar = models.ImageField(null=True, blank=True, upload_to=avatar_image_file_path)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
