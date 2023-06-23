@@ -1,8 +1,8 @@
-from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.validators import UniqueTogetherValidator
 
 from blog.models import Post, Commentary, Like
 from blog.serializers import (
@@ -80,7 +80,6 @@ class LikeViewSet(
 
     def perform_create(self, serializer):
         post = get_object_or_404(Post, pk=self.kwargs["post_pk"])
-        try:
-            serializer.save(owner=self.request.user, post=post)
-        except IntegrityError:
+        if Like.objects.filter(owner=self.request.user, post=post).exists():
             raise PermissionDenied("You can like a post only once.")
+        serializer.save(owner=self.request.user, post=post)
